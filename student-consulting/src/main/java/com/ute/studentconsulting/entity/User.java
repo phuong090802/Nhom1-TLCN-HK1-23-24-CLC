@@ -3,7 +3,8 @@ package com.ute.studentconsulting.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
@@ -12,6 +13,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -45,20 +47,14 @@ public class User {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    @Column(name = "revoked_day")
-    private Date revokedDay;
-
-    @NonNull
     @Column(name = "occupation")
     private String occupation;
 
     @NonNull
-    @Column(name = "online")
-    private Boolean online;
-
-    @NonNull
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH
+    })
     @JoinColumn(name = "role_id")
     private Role role;
 
@@ -66,9 +62,22 @@ public class User {
             cascade = CascadeType.ALL)
     private Set<RefreshToken> refreshTokens;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH
+    }, fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private Department department;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(name = "user_fields",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "field_id"))
+    private Set<Field> fields = new HashSet<>();
+
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL)
+    private Set<Question> questions = new HashSet<>();
 
 }

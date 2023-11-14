@@ -1,7 +1,7 @@
 package com.ute.studentconsulting.security.token;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ute.studentconsulting.payloads.response.ApiResponse;
+import com.ute.studentconsulting.payloads.response.MessageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +20,9 @@ public class AuthAccessDeniedToken implements AccessDeniedHandler {
     private final ObjectMapper objectMapper;
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
-        log.error("Unauthorized error: {}", accessDeniedException.getMessage());
+        log.error("Lỗi access denied: {}", accessDeniedException.getMessage());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        objectMapper.writeValue(response.getOutputStream(), new ApiResponse<>(false, "Không đủ quyền truy cập."));
+        objectMapper.writeValue(response.getOutputStream(), new MessageResponse(false, "Không đủ quyền truy cập"));
     }
 }

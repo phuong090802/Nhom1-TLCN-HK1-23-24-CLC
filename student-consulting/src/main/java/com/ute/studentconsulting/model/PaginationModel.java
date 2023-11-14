@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaginationModel<T> {
-    private List<T> data;
+    private List<T> items;
     private int page;
     private int pages;
 }

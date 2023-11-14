@@ -1,7 +1,7 @@
 package com.ute.studentconsulting.security.token;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ute.studentconsulting.payloads.response.ApiResponse;
+import com.ute.studentconsulting.payloads.response.MessageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,9 @@ public class AuthEntryPointToken implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        log.error("Unauthorized error: {}", authException.getMessage());
+        log.error("Lỗi unauthorized: {}", authException.getMessage());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        objectMapper.writeValue(response.getOutputStream(), new ApiResponse<>(false, "Xác thực không thành công."));
+        objectMapper.writeValue(response.getOutputStream(), new MessageResponse(false, "Xác thực thất bại"));
     }
 }

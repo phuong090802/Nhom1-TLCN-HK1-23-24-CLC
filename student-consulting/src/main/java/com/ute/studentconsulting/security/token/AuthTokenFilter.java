@@ -19,7 +19,7 @@ import java.io.IOException;
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
-    private TokenUtils tokenUtils;
+    private TokenUtility tokenUtility;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -28,8 +28,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             var token = parseToken(request);
-            if (StringUtils.hasText(token) && tokenUtils.validateToken(token)) {
-                var username = tokenUtils.getUsernameFromToken(token);
+            if (StringUtils.hasText(token) && tokenUtility.validateToken(token)) {
+                var username = tokenUtility.getUsernameFromToken(token);
                 var userDetails = userDetailsService.loadUserByUsername(username);
                 var authentication = new UsernamePasswordAuthenticationToken(
                         userDetails,
@@ -39,7 +39,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            log.error("Cannot set user authentication: {}", e.getMessage());
+            log.error("Lỗi không thể authorization người dùng: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
     }

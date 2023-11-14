@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,6 +29,7 @@ import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointToken unauthorizedHandler;
@@ -88,8 +90,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/uploads/**").hasAnyRole("USER", "COUNSELLOR", "DEPARTMENT_HEAD", "SUPERVISOR","ADMIN")
-                                .requestMatchers("/api/departments/**").permitAll()
+                                .requestMatchers("/api/department-head/**").hasRole("DEPARTMENT_HEAD")
+                                .requestMatchers("/api/staff/**").hasAnyRole("COUNSELLOR", "DEPARTMENT_HEAD")
+                                .requestMatchers("/api/users/**").hasRole("USER")
                                 .anyRequest().permitAll()
                 )
                 .authenticationProvider(authenticationProvider())
