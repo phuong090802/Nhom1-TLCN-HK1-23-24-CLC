@@ -141,7 +141,7 @@ public class DepartmentHeadController {
         var user = authUtils.getCurrentUser();
         var users = userService.findAllByDepartmentIsAndRoleIsNot(user.getDepartment(), user.getRole());
         var answers = answerService.findAllByStaffInAndApprovedIs(users, false);
-        var questionPage = questionService.findAllByAnswerInAndStatusIs(answers, 0, pageable);
+        var questionPage = questionService.findAllByAnswerInAndStatusIs(answers, 1, pageable);
         var simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         var questions = questionPage.map(question -> {
             var field = fieldService.findById(question.getField().getId());

@@ -13,6 +13,7 @@ public class QuestionDetailsModel {
 
     private String title;
     private String content;
+    private int status;
     private String date;
     private int views;
     private UserDetailsModel user;

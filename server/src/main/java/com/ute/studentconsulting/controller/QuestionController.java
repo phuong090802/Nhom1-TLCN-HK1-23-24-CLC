@@ -46,6 +46,7 @@ public class QuestionController {
         var questionDetails = new QuestionDetailsModel(
                 question.getTitle(),
                 question.getContent(),
+                question.getStatus(),
                 simpleDateFormat.format(question.getDate()),
                 question.getViews(),
                 new UserDetailsModel(user.getName(), user.getAvatar()),

@@ -1,6 +1,7 @@
 package com.ute.studentconsulting.repository;
 
 import com.ute.studentconsulting.entity.Department;
+import com.ute.studentconsulting.entity.Field;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +32,7 @@ public interface DepartmentRepository extends JpaRepository<Department, String> 
 
     Optional<Department> findByIdAndStatusIs(String id, Boolean status);
 
+    @Query("SELECT d FROM Department d JOIN d.fields f WHERE d.status = :status AND d.id <> :id AND f = :field")
+    List<Department> findAllByStatusIsAndIdIsNotAndFieldIs
+            (@Param("status") Boolean status, @Param("id") String id, @Param("field") Field field);
 }

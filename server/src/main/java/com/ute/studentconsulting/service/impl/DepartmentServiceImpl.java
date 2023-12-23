@@ -1,6 +1,7 @@
 package com.ute.studentconsulting.service.impl;
 
 import com.ute.studentconsulting.entity.Department;
+import com.ute.studentconsulting.entity.Field;
 import com.ute.studentconsulting.exception.NotFoundException;
 import com.ute.studentconsulting.repository.DepartmentRepository;
 import com.ute.studentconsulting.service.DepartmentService;
@@ -16,6 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
+
+    @Override
+    public List<Department> findAllByStatusIsAndIdIsNotAndFieldIs
+            (Boolean status, String id, Field field) {
+        return departmentRepository.findAllByStatusIsAndIdIsNotAndFieldIs(status, id, field);
+    }
 
     @Override
     public boolean existsByName(String name) {

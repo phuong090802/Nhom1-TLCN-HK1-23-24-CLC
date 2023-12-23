@@ -1,6 +1,7 @@
 package com.ute.studentconsulting.service;
 
 import com.ute.studentconsulting.entity.Department;
+import com.ute.studentconsulting.entity.Field;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -29,4 +30,6 @@ public interface DepartmentService {
     List<Department> findAllByStatusIs(boolean status);
 
     Department findByIdAndStatusIs(String id, boolean status);
+
+    List<Department> findAllByStatusIsAndIdIsNotAndFieldIs(Boolean status, String id, Field field);
 }

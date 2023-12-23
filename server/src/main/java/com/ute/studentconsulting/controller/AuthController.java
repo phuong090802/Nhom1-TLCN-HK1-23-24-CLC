@@ -12,6 +12,7 @@ import com.ute.studentconsulting.payload.response.ErrorResponse;
 import com.ute.studentconsulting.payload.response.SuccessResponse;
 import com.ute.studentconsulting.security.service.impl.UserDetailsImpl;
 import com.ute.studentconsulting.security.token.TokenUtils;
+import com.ute.studentconsulting.service.DepartmentService;
 import com.ute.studentconsulting.service.RefreshTokenService;
 import com.ute.studentconsulting.service.RoleService;
 import com.ute.studentconsulting.service.UserService;
@@ -46,6 +47,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final UserUtils userUtils;
     private final AuthUtils authUtils;
+    private final DepartmentService departmentService;
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser() {
@@ -55,8 +57,15 @@ public class AuthController {
     private ResponseEntity<?> handleGetCurrentUser() {
         var user = authUtils.getCurrentUser();
         var occupation = user.getOccupation() != null ? user.getOccupation() : "";
+
         var response = new CurrentUserModel(user.getId(), user.getName(), user.getEmail(), user.getPhone(),
-                user.getRole().getName().name(), occupation, user.getAvatar());
+                user.getRole().getName().name());
+        response.setOccupation(occupation);
+        response.setAvatar(user.getAvatar());
+        if(user.getDepartment() != null) {
+            var department = departmentService.findById(user.getDepartment().getId());
+            response.setDepartmentName(department.getName());
+        }
         return ResponseEntity.ok().body(new ApiSuccessResponse<>(response));
     }
 
@@ -120,9 +129,14 @@ public class AuthController {
             var occupation = user.getOccupation() != null ? user.getOccupation() : "";
 
             var response = new AuthModel(user.getId(), accessToken, user.getName(), user.getEmail(), user.getPhone(),
-                    user.getRole().getName().name(), occupation, user.getAvatar());
-
+                    user.getRole().getName().name());
+            response.setOccupation(occupation);
+            response.setAvatar(user.getAvatar());
             var cookie = tokenUtils.setCookie(savedToken.getToken());
+            if(user.getDepartment() != null) {
+                var department = departmentService.findById(user.getDepartment().getId());
+                response.setDepartmentName(department.getName());
+            }
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, cookie.toString())
                     .body(new ApiSuccessResponse<>(response));
@@ -158,7 +172,13 @@ public class AuthController {
         var cookie = tokenUtils.setCookie(savedToken.getToken());
         var occupation = user.getOccupation() != null ? user.getOccupation() : "";
         var response = new AuthModel(user.getId(), token, user.getName(), user.getEmail(), user.getPhone(),
-                authority.get().getAuthority(), occupation, user.getAvatar());
+                authority.get().getAuthority());
+        response.setOccupation(occupation);
+        response.setAvatar(user.getAvatar());
+        if(user.getDepartment() != null) {
+            var department = departmentService.findById(user.getDepartment().getId());
+            response.setDepartmentName(department.getName());
+        }
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new ApiSuccessResponse<>(response));

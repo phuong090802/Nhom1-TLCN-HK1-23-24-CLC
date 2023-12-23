@@ -4,6 +4,8 @@ import com.ute.studentconsulting.entity.Field;
 import com.ute.studentconsulting.model.PaginationModel;
 import com.ute.studentconsulting.payload.response.ApiSuccessResponse;
 import com.ute.studentconsulting.service.DepartmentService;
+import com.ute.studentconsulting.service.FieldService;
+import com.ute.studentconsulting.service.QuestionService;
 import com.ute.studentconsulting.util.AuthUtils;
 import com.ute.studentconsulting.util.FieldUtils;
 import com.ute.studentconsulting.util.SortUtils;
@@ -24,6 +26,23 @@ public class DepartmentController {
     private final SortUtils sortUtils;
     private final AuthUtils authUtils;
     private final FieldUtils fieldUtils;
+    private final QuestionService questionService;
+    private final FieldService fieldService;
+
+    @GetMapping("/questions/{id}")
+    public ResponseEntity<?> getFieldByQuestion(@PathVariable("id") String id) {
+        return handleGetFieldByQuestion(id);
+    }
+
+    @PreAuthorize("hasRole('COUNSELLOR') or hasRole('DEPARTMENT_HEAD')")
+    private ResponseEntity<?> handleGetFieldByQuestion(String id) {
+        var user = authUtils.getCurrentUser();
+        var question = questionService.findById(id);
+        var field = fieldService.findById(question.getField().getId());
+        var departments = departmentService.findAllByStatusIsAndIdIsNotAndFieldIs
+                (true, user.getDepartment().getId(), field);
+        return ResponseEntity.ok(new ApiSuccessResponse<>(departments));
+    }
 
     @PreAuthorize("hasRole('COUNSELLOR') or hasRole('DEPARTMENT_HEAD')")
     @GetMapping("/fields/my")

@@ -109,6 +109,7 @@ public class StaffController {
     }
 
     private ResponseEntity<?> handleAnswerQuestion(AnswerRequest request) {
+        validationAnswer(request);
         var staff = authUtils.getCurrentUser();
         var question = questionService.findById(request.getQuestionId());
         if (question.getAnswer() != null) {
@@ -193,4 +194,12 @@ public class StaffController {
         }
         return staff.getFields().stream().map(Field::getId).toList();
     }
+
+    private void validationAnswer(AnswerRequest request) {
+        var title = request.getContent().trim();
+        if (title.isEmpty()) {
+            throw new BadRequestException("Nội dung không thể để trống", "Nội dung bị trống", 10093);
+        }
+    }
+
 }
