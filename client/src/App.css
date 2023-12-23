@@ -1,0 +1,17 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #eeeeee;
+}
+
+.ql-container {
+    /* max-height: 200px; */
+}
+
+.accordion {
+    @apply max-w-[600px] mx-auto
+}
+
+.ql-container.ql-snow {
+    border: none !important;
+    background-color: #fff;
+}
