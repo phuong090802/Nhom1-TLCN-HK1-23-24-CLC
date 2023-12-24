@@ -6,7 +6,7 @@ import { deleteUser } from "../redux/slices/authSlice";
 import { successMessage } from "../redux/slices/commonSlice";
 
 const API = axios.create({
-    baseURL: 'https://student-consulting.onrender.com/api',
+    baseURL: 'http://localhost:8080/api',
     // timeout: 15000
 })
 
