@@ -65,12 +65,12 @@ public class DepartmentHeadController {
     }
 
     @GetMapping("/answers/questions/{id}")
-    public ResponseEntity<?> deleteGetAnswer(@PathVariable("id") String id) {
+    public ResponseEntity<?> getAnswer(@PathVariable("id") String id) {
         return handleGetAnswer(id);
     }
 
     private ResponseEntity<?> handleGetAnswer(String id) {
-        var question = questionService.findByIdAndStatusIs(id, 0);
+        var question = questionService.findByIdAndStatusIs(id, 1);
         var answer = question.getAnswer();
         if (answer.getApproved()) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(
@@ -82,7 +82,8 @@ public class DepartmentHeadController {
         var simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         var response = new AnswerApproveModel(question.getTitle(), question.getContent(), field.getName(),
                 new AnswerModel(answer.getId(), answer.getContent(), simpleDateFormat.format(answer.getDate())),
-                new StaffModel(counsellor.getId(), counsellor.getName(), counsellor.getEmail(), counsellor.getAvatar()));
+                new StaffModel(counsellor.getId(), counsellor.getName(),
+                        counsellor.getPhone(), counsellor.getEmail(), counsellor.getAvatar()));
         return ResponseEntity.ok(new ApiSuccessResponse<>(response));
     }
 

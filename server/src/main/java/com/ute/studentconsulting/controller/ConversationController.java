@@ -1,6 +1,8 @@
 package com.ute.studentconsulting.controller;
 
+import com.ute.studentconsulting.entity.Conversation;
 import com.ute.studentconsulting.entity.RoleName;
+import com.ute.studentconsulting.entity.User;
 import com.ute.studentconsulting.model.ConversationModel;
 import com.ute.studentconsulting.model.MessageModel;
 import com.ute.studentconsulting.payload.response.ApiSuccessResponse;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @RestController
@@ -58,26 +61,37 @@ public class ConversationController {
     }
 
     private ResponseEntity<?> handleGetAllConversations(String name) {
-        var user = authUtils.getCurrentUser();
-        var listConversation = conversationService.findAllByUser(user);
+        var user1 = authUtils.getCurrentUser();
+        var listConversation = conversationService.findAllByUser(user1);
         var ids = listConversation.stream()
                 .flatMap(conversation -> Stream.of(conversation.getStaff().getId(), conversation.getUser().getId()))
-                .filter(id -> !id.equals(user.getId()))
+                .filter(id -> !id.equals(user1.getId()))
                 .distinct().toList();
-        var conversations = name.equals("all") ? userService.findAllByIdIn(ids) :
+        var userConversations = name.equals("all") ? userService.findAllByIdIn(ids) :
                 userService.findAllByIdInAndNameContainingIgnoreCase(ids, name);
         var simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        var response = conversations.stream().map(userItem -> {
-                    var conversation = conversationService.findByUserIdAndStaffIdOrStaffIdAndUserId(user.getId(), userItem.getId());
+        var response = userConversations.stream()
+                .map(userItem -> {
+                    var conversation = findConversationByUser1AndUser2(user1, userItem);
                     var message = messageService.findFirstByConversationOrderBySentAtDesc(conversation);
-                    return new ConversationModel(conversation.getId(), userItem.getId(), userItem.getName(), user.getAvatar(),
-                            conversation.getDeletedByStaff(), conversation.getDeletedByUser(), new MessageModel(message.getId(), message.getMessageText(),
-                            simpleDateFormat.format(message.getSentAt()), message.getSeen(), message.getSender().getId()));
+                    if (conversation != null && message != null) {
+                        return new ConversationModel(conversation.getId(), userItem.getId(), userItem.getName(), user1.getAvatar(),
+                                conversation.getDeletedByStaff(), conversation.getDeletedByUser(), new MessageModel(message.getId(), message.getMessageText(),
+                                simpleDateFormat.format(message.getSentAt()), message.getSeen(), message.getSender().getId()));
+                    }
+                    return null;
                 })
+                .filter(Objects::nonNull)
                 .toList();
         return ResponseEntity.ok(new ApiSuccessResponse<>(response));
     }
 
+    private Conversation findConversationByUser1AndUser2(User user1, User user2) {
+        if (user1.getRole().getName().equals(RoleName.ROLE_USER)) {
+            return conversationService.findByStaffIsAndUserIs(user2, user1);
+        }
+        return conversationService.findByStaffIsAndUserIs(user1, user2);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getAllMessage(@PathVariable("id") String id) {
@@ -88,7 +102,7 @@ public class ConversationController {
         var conversation = conversationService.findById(id);
         var simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         var messages = messageService.findAllByConversationOrderBySentAtAsc(conversation).stream().map(message ->
-                new MessageModel(message.getMessageText(), message.getMessageText(),
+                new MessageModel(message.getId(), message.getMessageText(),
                         simpleDateFormat.format(message.getSentAt()),
                         true, message.getSender().getId())).toList();
         return ResponseEntity.ok(new ApiSuccessResponse<>(messages));

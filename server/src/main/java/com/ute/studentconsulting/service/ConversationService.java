@@ -13,7 +13,6 @@ public interface ConversationService {
     Conversation findByStaffIsAndUserIs(User staff, User user);
 
     Conversation findById(String id);
-    Conversation findByUserIdAndStaffIdOrStaffIdAndUserId
-            (String userId,String staffId);
+
     void deleteById(String id);
 }

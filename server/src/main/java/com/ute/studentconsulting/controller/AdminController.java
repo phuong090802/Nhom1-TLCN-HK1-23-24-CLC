@@ -239,6 +239,7 @@ public class AdminController {
                 (departmentHead != null) ? new StaffModel(
                         departmentHead.getId(),
                         departmentHead.getName(),
+                        departmentHead.getPhone(),
                         departmentHead.getEmail(),
                         departmentHead.getAvatar()
                 ) : null);

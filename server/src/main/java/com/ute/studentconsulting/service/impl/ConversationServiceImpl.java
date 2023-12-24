@@ -17,11 +17,6 @@ public class ConversationServiceImpl implements ConversationService {
     private final ConversationRepository conversationRepository;
 
     @Override
-    public Conversation findByUserIdAndStaffIdOrStaffIdAndUserId(String userId, String staffId) {
-        return conversationRepository.findByUserIdAndStaffIdOrStaffIdAndUserId(userId, staffId, staffId, userId);
-    }
-
-    @Override
     @Transactional
     public void deleteById(String id) {
         conversationRepository.deleteById(id);

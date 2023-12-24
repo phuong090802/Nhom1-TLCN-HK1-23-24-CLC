@@ -17,7 +17,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message findFirstByConversationOrderBySentAtDesc(Conversation conversation) {
-        return messageRepository.findFirstByConversationOrderBySentAtDesc(conversation);
+        return messageRepository.findFirstByConversationOrderBySentAtDesc(conversation)
+                .orElse(null);
     }
 
     @Override

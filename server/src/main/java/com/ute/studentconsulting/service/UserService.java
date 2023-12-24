@@ -47,7 +47,8 @@ public interface UserService {
             (Pageable pageable, Role admin, Role role, String occupation);
 
     Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleIsNotAndRoleIs
-            (String value, Role admin,Role role, Pageable pageable);
+            (String value, Role admin, Role role, Pageable pageable);
+
     Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleIsNotAndRoleIsAndOccupationNotIn
             (String value, Role admin, Collection<String> occupations, Role role, Pageable pageable);
 
@@ -130,11 +131,23 @@ public interface UserService {
 
     List<User> findAllByIdIn(Collection<String> ids);
 
-    User findByEmailAndEnabledIs(String email, Boolean enabled);
+    User findByEmailAndEnabledIs(String email, boolean enabled);
 
     User findByResetPasswordTokenAndResetPasswordExpireAfter(String resetPasswordToken, Date current);
 
     List<User> findAllByDepartmentIsAndRoleIsNot(Department department, Role role);
+
     List<User> findAllByIdInAndNameContainingIgnoreCase(Collection<String> ids, String name);
+
+    Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIs
+            (String value, Collection<Role> roles, boolean enabled, Pageable pageable);
+
+    Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIsAndDepartmentIs
+            (String value, Collection<Role> roles, boolean enabled, Department department, Pageable pageable);
+
+    Page<User> findAllByRoleNotInAndEnabledIsAndDepartmentIs
+            (Collection<Role> roles, boolean enabled, Department department, Pageable pageable);
+
+    Page<User> findAllByRoleNotInAndEnabledIs(Collection<Role> roles, boolean enabled, Pageable pageable);
 
 }

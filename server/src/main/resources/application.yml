@@ -3,6 +3,11 @@ spring:
     url: jdbc:mysql://student-consulting-student-consulting.aivencloud.com:12130/student-consulting?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
     username: avnadmin
     password: AVNS_KGK3QJZU7kwZkceD4ks
+  #jpa:
+    #show-sql: true
+    #properties:
+      #hibernate:
+        #format_sql: true
 
   mail:
     host: smtp.gmail.com

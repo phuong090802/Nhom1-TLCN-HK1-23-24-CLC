@@ -5,8 +5,9 @@ import com.ute.studentconsulting.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MessageRepository extends JpaRepository<Message, String> {
     List<Message> findAllByConversationOrderBySentAtAsc(Conversation conversation);
-    Message findFirstByConversationOrderBySentAtDesc(Conversation conversation);
+    Optional<Message> findFirstByConversationOrderBySentAtDesc(Conversation conversation);
 }

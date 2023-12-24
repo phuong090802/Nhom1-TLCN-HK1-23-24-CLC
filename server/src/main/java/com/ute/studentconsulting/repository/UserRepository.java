@@ -170,6 +170,22 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByResetPasswordTokenAndResetPasswordExpireAfter
             (String resetPasswordToken, Date current);
+
     List<User> findAllByDepartmentIsAndRoleIsNot(Department department, Role role);
+
     List<User> findAllByIdInAndNameContainingIgnoreCase(Collection<String> ids, String name);
+
+    @Query("SELECT u FROM User u WHERE (LOWER(u.name) LIKE %:value% OR LOWER(u.email) LIKE %:value% OR u.phone LIKE %:value%) " +
+            "AND u.role IN :roles AND u.enabled = :enabled")
+    Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIs
+            (@Param("value") String value, @Param("roles") Collection<Role> roles, @Param("enabled") Boolean enabled, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE (LOWER(u.name) LIKE %:value% OR LOWER(u.email) LIKE %:value% OR u.phone LIKE %:value%) " +
+            "AND u.role IN :roles AND u.enabled = :enabled AND u.department = :department")
+    Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIsAndDepartmentIs
+            (@Param("value") String value, @Param("roles") Collection<Role> roles, @Param("enabled") Boolean enabled, @Param("department") Department department, Pageable pageable);
+
+    Page<User> findAllByRoleNotInAndEnabledIsAndDepartmentIs(Collection<Role> roles, Boolean enabled, Department department, Pageable pageable);
+
+    Page<User> findAllByRoleNotInAndEnabledIs(Collection<Role> roles, Boolean enabled, Pageable pageable);
 }

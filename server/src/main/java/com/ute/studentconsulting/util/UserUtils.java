@@ -80,7 +80,7 @@ public class UserUtils {
 
     public List<StaffModel> mapUserPageToStaffModels(Page<User> userPage) {
         return userPage.getContent().stream().map(user -> new StaffModel(
-                user.getId(), user.getName(),
+                user.getId(), user.getName(), user.getPhone(),
                 user.getEmail(), user.getAvatar())).toList();
     }
 }

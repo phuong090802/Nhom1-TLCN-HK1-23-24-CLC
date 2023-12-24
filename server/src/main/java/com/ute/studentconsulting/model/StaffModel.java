@@ -9,6 +9,7 @@ import lombok.*;
 public class StaffModel {
     private String id;
     private String name;
+    private String phone;
     private String email;
     private String avatar;
 }

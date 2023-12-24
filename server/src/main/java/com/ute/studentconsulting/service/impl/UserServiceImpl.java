@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmailAndEnabledIs(String email, Boolean enabled) {
+    public User findByEmailAndEnabledIs(String email, boolean enabled) {
         return userRepository.findByEmailAndEnabledIs(email, enabled)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng",
                         "Không tìm thấy người dùng với trạng thái hoạt động và email: %s".formatted(email),
@@ -279,6 +279,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIsAndDepartmentIs
+            (String value, Collection<Role> roles, boolean enabled, Department department, Pageable pageable) {
+        return userRepository
+                .findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIsAndDepartmentIs
+                        (value, roles, enabled, department, pageable);
+    }
+
+    @Override
     public Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleIsNotAndRoleIsAndOccupationEqualsIgnoreCaseAndEnabledIs
             (String value, Role role, String occupation, boolean enabled, Pageable pageable) {
         return userRepository
@@ -292,6 +300,24 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleIsNotAndRoleIsAndOccupationNotInAndEnableIs
                         (value, admin, occupations, role, enabled, pageable);
+    }
+
+    @Override
+    public Page<User> findAllByRoleNotInAndEnabledIsAndDepartmentIs
+            (Collection<Role> roles, boolean enabled, Department department, Pageable pageable) {
+        return userRepository.findAllByRoleNotInAndEnabledIsAndDepartmentIs(roles,enabled, department, pageable);
+    }
+
+    @Override
+    public Page<User> findAllByRoleNotInAndEnabledIs(Collection<Role> roles, boolean enabled, Pageable pageable) {
+        return userRepository.findAllByRoleNotInAndEnabledIs(roles, enabled, pageable);
+    }
+
+    @Override
+    public Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIs
+            (String value, Collection<Role> roles, boolean enabled, Pageable pageable) {
+        return userRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIs
+                (value, roles, enabled, pageable);
     }
 
     @Override

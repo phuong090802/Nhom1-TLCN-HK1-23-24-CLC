@@ -1,21 +1,27 @@
 package com.ute.studentconsulting.controller;
 
 import com.ute.studentconsulting.entity.Field;
+import com.ute.studentconsulting.entity.Role;
+import com.ute.studentconsulting.entity.RoleName;
+import com.ute.studentconsulting.entity.User;
 import com.ute.studentconsulting.model.PaginationModel;
 import com.ute.studentconsulting.payload.response.ApiSuccessResponse;
-import com.ute.studentconsulting.service.DepartmentService;
-import com.ute.studentconsulting.service.FieldService;
-import com.ute.studentconsulting.service.QuestionService;
+import com.ute.studentconsulting.service.*;
 import com.ute.studentconsulting.util.AuthUtils;
 import com.ute.studentconsulting.util.FieldUtils;
 import com.ute.studentconsulting.util.SortUtils;
+import com.ute.studentconsulting.util.UserUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/departments")
@@ -28,6 +34,56 @@ public class DepartmentController {
     private final FieldUtils fieldUtils;
     private final QuestionService questionService;
     private final FieldService fieldService;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final UserUtils userUtils;
+
+    @GetMapping("/staffs")
+    public ResponseEntity<?> getAllStaff(
+            @RequestParam(required = false, name = "value") String value,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "3") int size,
+            @RequestParam(defaultValue = "name, asc", name = "sort") String[] sort,
+            @RequestParam(name = "departmentId", defaultValue = "all") String departmentId
+    ) {
+        return handleGetAllStaff(value, page, size, sort, departmentId);
+    }
+
+    private ResponseEntity<?> handleGetAllStaff(String value, int page, int size, String[] sort, String departmentId) {
+        var orders = sortUtils.sortOrders(sort);
+        var pageable = PageRequest.of(page, size, Sort.by(orders));
+        var roles = List.of(roleService.findByName(RoleName.ROLE_COUNSELLOR),
+                roleService.findByName(RoleName.ROLE_DEPARTMENT_HEAD));
+        var staffPage = (value == null)
+                ? getStaffByDepartmentIs(roles, departmentId, pageable)
+                : getStaffByDepartmentIsAllAndSearch(roles, value, departmentId, pageable);
+        var staffs = userUtils.mapUserPageToStaffModels(staffPage);
+        var response = new PaginationModel<>(staffs,
+                staffPage.getNumber(), staffPage.getTotalPages());
+        return ResponseEntity.ok(new ApiSuccessResponse<>(response));
+    }
+
+    private Page<User> getStaffByDepartmentIsAllAndSearch
+            (List<Role> roles, String value, String departmentId, Pageable pageable) {
+        return departmentId.equals("all")
+                // value = value, department = all
+                ? userService.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIs
+                (value, roles, true, pageable)
+                // value = value, department = value,
+                : userService.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingAndRoleInAndEnabledIsAndDepartmentIs
+                (value, roles, true, departmentService.findById(departmentId), pageable);
+    }
+
+    private Page<User> getStaffByDepartmentIs
+            (List<Role> roles, String departmentId, Pageable pageable) {
+        return departmentId.equals("all")
+                // value = null, department = all,
+                ? userService.findAllByRoleNotInAndEnabledIs(roles, true, pageable)
+                // value = null, department = value, field = all
+                : userService.findAllByRoleNotInAndEnabledIsAndDepartmentIs
+                (roles, true, departmentService.findByIdAndStatusIs(departmentId, true), pageable);
+    }
+
 
     @GetMapping("/questions/{id}")
     public ResponseEntity<?> getFieldByQuestion(@PathVariable("id") String id) {
