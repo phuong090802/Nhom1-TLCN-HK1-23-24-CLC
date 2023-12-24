@@ -164,7 +164,7 @@ public class DepartmentHeadController {
     private ResponseEntity<?> handleUpdateApproveAnswer(String id) {
         var answer = answerService.findById(id);
         var question = answer.getQuestion();
-        question.setStatus(1);
+        question.setStatus(2);
         questionService.save(question);
         answer.setApproved(true);
         answerService.save(answer);
