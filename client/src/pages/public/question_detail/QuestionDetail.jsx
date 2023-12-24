@@ -27,14 +27,10 @@ const QuestionDetail = () => {
     const getQuestionDetail = async () => {
         try {
             const response = await getQuestionDeatailById(questionId)
-            if (response.success) {
-                setQuestion(response.data)
-            } else {
-                dispatch(errorMessage(response?.message ? response.message : 'Lỗi lấy dữ liệu'))
-            }
+            setQuestion(response.data)
         } catch (error) {
             dispatch(errorMessage(error?.message ? error.message : 'Lỗi lấy dữ liệu'))
-        } 
+        }
     }
 
     return (
@@ -87,7 +83,7 @@ const QuestionDetail = () => {
                             <div className="bg-white p-4 rounded-md mt-1">
                                 <h1 className="text-xl font-bold text-[#2A2A2A]">Phản hồi</h1>
                                 {
-                                    question?.answer ?
+                                    (question.status === 2 && question?.answer) ?
                                         <div className="flex flex-row mt-2 mb-3">
                                             <img src={(question.answer.user?.avatar) ? question.answer.user.avatar : blankAvt}
                                                 alt=""

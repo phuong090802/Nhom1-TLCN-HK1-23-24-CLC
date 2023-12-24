@@ -6,16 +6,17 @@ import { useDispatch, useSelector } from "react-redux"
 import { errorMessage, hideLoading, showLoading, successMessage } from "../../../redux/slices/commonSlice.js"
 import { addCookie } from "../../../utils/cookie.js"
 import { setUser } from "../../../redux/slices/authSlice.js"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { getForwardLink } from "../../../utils/route.js"
 import { isAuthenticatedSelector, userSelector } from "../../../redux/selectors/authSelector.js"
 import RegisterForm from "../../../features/register_form"
 import ForgotPasswordForm from "../../../features/forgot_password_form"
 
 const Auth = () => {
+    let { tog } = useParams()
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const [toggle, setToggle] = useState(1)
+    const [toggle, setToggle] = useState(tog ? 2 : 1)
     const isAuthen = useSelector(isAuthenticatedSelector)
     const user = useSelector(userSelector)
     const [isLoad, setIsLoad] = useState(false)
@@ -41,9 +42,7 @@ const Auth = () => {
         dispatch(showLoading())
         try {
             const res = await getUser()
-            if (res.success) {
-                dispatch(setUser(res.data))
-            }
+            dispatch(setUser(res.data))
         } catch (error) {
 
         } finally {
@@ -56,11 +55,7 @@ const Auth = () => {
         dispatch(showLoading())
         try {
             const res = await requestResetPassword(data)
-            if (res.success) {
-                dispatch(successMessage('Yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email'))
-            } else {
-                dispatch(errorMessage(res?.message ? res.message : 'Có lỗi xảy ra'))
-            }
+            dispatch(successMessage('Yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email'))
         } catch (error) {
             dispatch(errorMessage(error?.message ? error.message : 'Có lỗi xảy ra'))
         }

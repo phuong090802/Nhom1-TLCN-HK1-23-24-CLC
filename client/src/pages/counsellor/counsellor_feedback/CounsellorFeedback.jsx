@@ -11,7 +11,7 @@ import { collumns } from './const'
 
 const CounsellorFeedback = () => {
 
-    const [params, setParams] = useState({ page: 0, size: 10 })
+    const [params, setParams] = useState({ page: 0, size: 5 })
 
     const dispatch = useDispatch()
 
@@ -79,7 +79,7 @@ const CounsellorFeedback = () => {
         <StaffModuleHeader moduleTitle={'Phản hồi từ trưởng khoa'} role={'departmentHead'} >
             <div className="grid grid-cols-1 lg:grid-cols-2 my-4">
                 <div className="md:flex space-x-2 mb-2 lg:mb-0 hidden">
-                    <StaffButton color='#f44336'
+                    <StaffButton color='red'
                         oC={handleDeleteAllFeedback}>
                         <div>
                             <DeleteOutlineOutlinedIcon className="mb-1 mr-1" />Đã đọc tất cả

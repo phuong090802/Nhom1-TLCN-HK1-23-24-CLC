@@ -1,5 +1,3 @@
-import { getCookieByName } from "../utils/cookie"
-
 const commonHeader = { 'Content-Type': 'application/json' }
 const authHeader = (token) => {
     return {
@@ -7,7 +5,14 @@ const authHeader = (token) => {
         'Authorization': `Bearer ${token}`
     }
 }
+const multipartHeader = (token) => {
+    return {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+    }
+}
 export {
     commonHeader,
-    authHeader
+    authHeader,
+    multipartHeader
 }

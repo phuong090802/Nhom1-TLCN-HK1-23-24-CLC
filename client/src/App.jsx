@@ -36,6 +36,7 @@ import FaqsPage from "./pages/public/faq";
 import DepartmentHeadFaqs from "./pages/department_head/department_head_faqs";
 import CounsellorFeedback from "./pages/counsellor/counsellor_feedback";
 import UserMessage from "./pages/user/user_message";
+import CounsellorList from "./pages/public/counsellor_list/CounsellorList";
 
 function App() {
   const dispatch = useDispatch()
@@ -72,7 +73,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
+            <Route path="/counsellorlist" element={<CounsellorList />} />
             <Route path="/login" element={<Auth />}></Route>
+            <Route path="/login/:tog" element={<Auth />}></Route>
             <Route path="/" element={<PublicHome />} />
             <Route path="/question">
               <Route path=":questionId" element={<QuestionDetail />} />
@@ -115,6 +118,7 @@ function App() {
               <Route path="home" element={<CounsellorHome />} />
               <Route path="questions" element={<CounsellorQuestion />} />
               <Route path="feedback" element={<CounsellorFeedback />} />
+              <Route path="message" element={<UserMessage />} />
             </Route>
 
             {/* userRoute */}

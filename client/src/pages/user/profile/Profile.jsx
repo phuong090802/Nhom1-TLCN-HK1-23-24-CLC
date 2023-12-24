@@ -7,6 +7,7 @@ import { errorMessage, hideLoading, showLoading, successMessage } from '../../..
 import validator from 'validator';
 import { updateUserInfor } from '../../../service/auth_service/authenticate';
 import { setUser } from '../../../redux/slices/authSlice';
+import UploadModal from '../../../features/upload_modal/UploadModal';
 
 const Profile = () => {
     const dispatch = useDispatch()
@@ -16,6 +17,8 @@ const Profile = () => {
     const user = useSelector(userSelector)
 
     const [userInfor, setUserInfor] = useState({ ...user })
+
+    const [showUpload, setShowUpload] = useState(false)
 
     const inputOnChange = (e) => {
         setUserInfor({
@@ -86,108 +89,109 @@ const Profile = () => {
             }
 
             try {
-                const response = await updateUserInfor({ ...data, occupation: userInfor.occupation })
+                const response = await updateUserInfor({ name: userInfor.name, occupation: userInfor.occupation })
 
                 dispatch(successMessage(response?.message ? response.message : 'Cập nhật thông tin thành công'))
                 dispatch(setUser(userInfor))
                 setOnEdit(false)
             } catch (error) {
                 dispatch(errorMessage(error?.message ? error.message : 'Có lỗi xảy ra'))
-            } 
+            }
         }
     }
 
 
 
     return (
-        <div className="bg-gray-100 h-[80vh] flex items-center justify-center">
-            <div className="bg-white p-8 rounded shadow-md">
-                <div className="flex mb-4">
-                    <div className=' flex justify-center items-center mr-5 relative'>
-                        <img src={userInfor?.avatar ? userInfor.avatar : blankAvt} alt="Avatar" className="w-20 h-20 rounded-full border border-dark_blue col-span-1" />
-                        <span className='absolute bottom-0 right-0 cursor-pointer'>
-                            <PhotoIcon fontSize='small' className='text-dark_blue' />
-                        </span>
+        <>
+            {showUpload &&
+                <UploadModal
+                    handleClose={() => setShowUpload(false)} />}
+            <div className="bg-gray-100 h-[80vh] flex items-center justify-center">
+                <div className="bg-white p-8 rounded shadow-md">
+                    <div className="flex mb-4">
+                        <div className=' flex justify-center items-center mr-5 relative'>
+                            <img src={user?.avatar ? user.avatar : blankAvt} alt="Avatar" className="w-20 h-20 rounded-full border border-dark_blue col-span-1" />
+                            <span className='absolute bottom-0 right-0 cursor-pointer' onClick={() => { console.log('wwork'); setShowUpload(true) }}>
+                                <PhotoIcon fontSize='small' className='text-dark_blue' />
+                            </span>
+                        </div>
+                        <div className='flex flex-col justify-center'>
+                            <input
+                                className={`text-2xl font-bold ${onEdit ? 'border-b' : ''} border-black outline-none mb-2`}
+                                value={userInfor.name}
+                                name='name'
+                                onChange={e => inputOnChange(e)}
+                                disabled={!onEdit}
+                            />
+                            <p className="text-white text-xs mb-4 border bg-my_red border-red-700 rounded-md w-fit py-[2px] px-1 font-bold">{userInfor.role === 'ROLE_USER' ? 'Người dùng' : 'Nhân viên hệ thống'}</p>
+                        </div>
                     </div>
-                    <div className='flex flex-col justify-center'>
-                        <input
-                            className={`text-2xl font-bold ${onEdit ? 'border-b' : ''} border-black outline-none mb-2`}
-                            value={userInfor.name}
-                            name='name'
-                            onChange={e => inputOnChange(e)}
-                            disabled={!onEdit}
-                        />
-                        <p className="text-white text-xs mb-4 border bg-my_red border-red-700 rounded-md w-fit py-[2px] px-1 font-bold">{userInfor.role === 'ROLE_USER' ? 'Người dùng' : 'Nhân viên hệ thống'}</p>
+                    <div className="">
+                        <div className='flex'>
+                            <p className="text-gray-600 text-sm mb-4 w-[40%]">Số điện thoại:</p>
+                            <p
+                                type="text"
+                                className={`text-gray-600 text-sm mb-4 ml-1 font-bold outline-none w-[300px]`}
+                                name='email'
+                            >{userInfor.phone}</p>
+                        </div>
+                        <div className='flex'>
+                            <p className="text-gray-600 text-sm mb-4 w-[40%]">Email:</p>
+                            <p
+                                type="text"
+                                className={`text-gray-600 text-sm mb-4 ml-1 font-bold outline-none w-[300px]`}
+                                name='email'
+                            >{userInfor.email}</p>
+                        </div>
+                        <div className='flex'>
+                            <p className="text-gray-600 text-sm mb-4 w-[40%]">{(userInfor.role === 'ROLE_USER') ? 'Nghề nghiệp' : 'Chức vụ'}:</p>
+                            {
+                                userInfor.role === 'ROLE_USER' ?
+                                    <select
+                                        type="text"
+                                        className={`text-gray-600 text-sm mb-4 ml-1 font-bold outline-none w-[300px] ${onEdit ? ' border-b border-black' : 'cursor-default'}`}
+                                        value={userInfor.occupation}
+                                        name='occupation'
+                                        onChange={e => inputOnChange(e)}
+                                        disabled={!onEdit} >
+                                        <option value="">Chưa cập nhật</option>
+                                        <option value="Học Sinh">Học Sinh</option>
+                                        <option value="Sinh Viên">Sinh Viên</option>
+                                        <option value="Cựu Sinh Viên">Cựu Sinh Viên</option>
+                                        <option value="Phụ huynh">Phụ huynh</option>
+                                    </select>
+                                    :
+                                    <p type="text"
+                                        className='text-gray-600 text-sm mb-4 ml-1 font-bold outline-none w-[300px]'
+                                    >{userInfor.role}</p>
+                            }
+                        </div>
                     </div>
-                </div>
-                <div className="">
-                    <div className='flex'>
-                        <p className="text-gray-600 text-sm mb-4 w-[40%]">Số điện thoại:</p>
-                        <input
-                            type="text"
-                            name='phone'
-                            className={`text-gray-600 text-sm mb-4 ml-1 font-bold outline-none w-[300px] ${onEdit ? ' border-b border-black' : 'cursor-default'}`}
-                            onChange={e => inputOnChange(e)}
-                            readOnly={!onEdit}
-                            value={userInfor.phone} />
-                    </div>
-                    <div className='flex'>
-                        <p className="text-gray-600 text-sm mb-4 w-[40%]">Email:</p>
-                        <input
-                            type="text"
-                            className={`text-gray-600 text-sm mb-4 ml-1 font-bold outline-none w-[300px] ${onEdit ? ' border-b border-black' : 'cursor-default'}`}
-                            readOnly={!onEdit}
-                            name='email'
-                            value={userInfor.email}
-                            onChange={e => inputOnChange(e)} />
-                    </div>
-                    <div className='flex'>
-                        <p className="text-gray-600 text-sm mb-4 w-[40%]">Nghề nghiệp:</p>
+                    <div className='w-full flex justify-end mt-4'>
                         {
-                            userInfor.role === 'ROLE_USER' ?
-                                <select
-                                    type="text"
-                                    className={`text-gray-600 text-sm mb-4 ml-1 font-bold outline-none w-[300px] ${onEdit ? ' border-b border-black' : 'cursor-default'}`}
-                                    value={userInfor.occupation}
-                                    name='occupation'
-                                    onChange={e => inputOnChange(e)}
-                                    disabled={!onEdit} >
-                                    <option value="">Chưa cập nhật</option>
-                                    <option value="Học Sinh">Học Sinh</option>
-                                    <option value="Sinh Viên">Sinh Viên</option>
-                                    <option value="Cựu Sinh Viên">Cựu Sinh Viên</option>
-                                    <option value="Phụ huynh">Phụ huynh</option>
-                                </select>
+                            onEdit ?
+                                <>
+                                    <button className={`mr-3 px-4 py-2 duration-500 bg-red-500 hover:bg-red-600 text-white rounded-md  focus:outline-none focus:ring focus:border-red-300`}
+                                        onClick={() => {
+                                            setUserInfor(user)
+                                            setOnEdit(false)
+                                        }}>Hủy
+                                    </button>
+                                    <button className={`px-4 py-2 duration-500 bg-green-500 hover:bg-green-600 text-white rounded-md  focus:outline-none focus:ring focus:border-green-300`}
+                                        onClick={handleUpdate}>Cập nhật
+                                    </button>
+                                </>
                                 :
-                                <input type="text"
-                                    className='text-gray-600 text-sm mb-4 ml-1 font-bold outline-none w-[300px]'
-                                    value={userInfor.role} />
+                                <button className={`px-4 py-2 duration-500 bg-blue-500 hover:bg-blue-600 text-white rounded-md  focus:outline-none focus:ring focus:border-blue-300`}
+                                    onClick={() => { setOnEdit(true) }}>Chỉnh sửa
+                                </button>
                         }
-                    </div>
-                </div>
-                <div className='w-full flex justify-end mt-4'>
-                    {
-                        onEdit ?
-                            <>
-                                <button className={`mr-3 px-4 py-2 duration-500 bg-red-500 hover:bg-red-600 text-white rounded-md  focus:outline-none focus:ring focus:border-red-300`}
-                                    onClick={() => {
-                                        setUserInfor(user)
-                                        setOnEdit(false)
-                                    }}>Hủy
-                                </button>
-                                <button className={`px-4 py-2 duration-500 bg-green-500 hover:bg-green-600 text-white rounded-md  focus:outline-none focus:ring focus:border-green-300`}
-                                    onClick={handleUpdate}>Cập nhật
-                                </button>
-                            </>
-                            :
-                            <button className={`px-4 py-2 duration-500 bg-blue-500 hover:bg-blue-600 text-white rounded-md  focus:outline-none focus:ring focus:border-blue-300`}
-                                onClick={() => { setOnEdit(true) }}>Chỉnh sửa
-                            </button>
-                    }
 
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

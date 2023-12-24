@@ -19,7 +19,7 @@ const FaqsPage = () => {
     const [faqList, setFaqList] = useState([])
     const [showAnswer, setShowAnswer] = useState('')
     const page = searchParams.get('page') ? Number(searchParams.get('page')) : 0
-    const [params, setParams] = useState({ size: 10 })
+    const [params, setParams] = useState({ size: 5 })
     const [totalPage, setTotalPage] = useState(0)
     const [depList, setDepList] = useState([])
 
@@ -74,9 +74,9 @@ const FaqsPage = () => {
             {
                 !isLoad ?
                     (faqList.length !== 0) ?
-                        faqList.map((faq) => {
+                        faqList.map((faq, i) => {
                             return (
-                                <div className="mt-2">
+                                <div key={i} className="mt-2">
                                     <div className="text-gray-600 font-bold text-lg w-full hover:bg-blue-400 hover:text-white cursor-pointer flex items-center duration-300 p-1"
                                         onClick={() => handleShowAnswer(faq.id)}>
                                         {(showAnswer !== faq.id) ?

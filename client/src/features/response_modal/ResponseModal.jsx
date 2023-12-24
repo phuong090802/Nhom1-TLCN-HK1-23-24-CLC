@@ -32,11 +32,7 @@ const ResponseModal = ({ handleClose, dataChange }) => {
 
         try {
             const response = await getQuestionById(questionId)
-            if (response.success) {
-                setQuestionData(response.data)
-            } else {
-                dispatch(errorMessage(response?.message ? response.message : 'Lỗi lấy câu hỏi'))
-            }
+            setQuestionData(response.data)
         } catch (error) {
             dispatch(errorMessage(error?.message ? error.message : 'Lỗi lấy câu hỏi'))
         } finally {
@@ -51,11 +47,7 @@ const ResponseModal = ({ handleClose, dataChange }) => {
 
         try {
             const response = await getDepList()
-            if (response.success) {
-                setDepList(response.data)
-            } else {
-                dispatch(successMessage(response?.message ? response.message : 'Lỗi lấy danh sách khoa'))
-            }
+            setDepList(response.data)
         } catch (error) {
             dispatch(errorMessage(error?.message ? error.message : 'Lỗi lấy danh sách khoa'))
         } finally {
@@ -65,6 +57,11 @@ const ResponseModal = ({ handleClose, dataChange }) => {
 
 
     const handleResponse = async () => {
+        if (content === '') {
+            dispatch(errorMessage('Nội dung câu trả lời không được để trống'))
+            return
+        }
+
         dispatch(showLoading())
 
         try {
@@ -76,7 +73,7 @@ const ResponseModal = ({ handleClose, dataChange }) => {
                 handleClose()
             }, 1000);
         } catch (error) {
-            dispatch(errorMessage(error?.message ? error.message : 'Cõ lỗi xảy ra'))
+            dispatch(errorMessage(error?.message ? error.message : 'Có lỗi xảy ra'))
         } finally {
             dispatch(hideLoading())
         }
@@ -144,8 +141,8 @@ const ResponseModal = ({ handleClose, dataChange }) => {
                 <div className="mx-auto bg-white px-4 py-2 rounded-md shadow-md border duration-500">
                     <p className="font-bold text-lg">{questionData.title}</p>
                     <p className="text-xs">Date: {dateFormat(questionData.date)}</p>
-                    <p className="border border-[#DBD6A4] inline-block bg-[#E7E3B3] p-[2px] rounded-md text-xs mr-2">{questionData.departmentName}</p>
-                    <p className="border border-[#DBD6A4] inline-block bg-[#E7E3B3] p-[2px] rounded-md text-xs">{questionData.fieldName}</p>
+                    <p className="border border-dark_blue inline-block bg-gray-400 text-white p-[2px] rounded-md text-xs mr-2">{questionData.departmentName}</p>
+                    <p className="border border-dark_blue inline-block bg-gray-400 text-white p-[2px] rounded-md text-xs">{questionData.fieldName}</p>
                     <div className="border-2 rounded-md mt-3 p-1 max-w-[700px]" dangerouslySetInnerHTML={{ __html: questionData.content }}></div>
                 </div>
                 {!showResponse && !showForwardOptions && !showPrivate &&

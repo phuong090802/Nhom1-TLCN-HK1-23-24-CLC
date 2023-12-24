@@ -1,4 +1,4 @@
-const initParams = { page: 0, size: 10 }
+const initParams = { page: 0, size: 5 }
 const collumns = [
     { header: 'Tên lĩnh vực', key: 'name' }
 ]

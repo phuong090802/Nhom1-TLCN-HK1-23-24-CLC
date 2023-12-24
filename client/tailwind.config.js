@@ -12,6 +12,12 @@ export default {
       },
       fontFamily: {
         roboto: 'Roboto'
+      },
+      backgroundImage: {
+        'banner_bg': "url('/src/assets/image/banner_bg.jpg')",
+      },
+      backgroundSize: {
+        'full': '100% auto', 
       }
     },
   },

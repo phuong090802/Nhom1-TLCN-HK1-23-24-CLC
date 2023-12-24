@@ -19,7 +19,7 @@ const DepartmentHeadAnswer = () => {
     const totalPage = useSelector(depHAnswerListPages)
 
     const [showDetailAnswer, setShowDetailAnswer] = useState(false)
-    const [params, setParams] = useState({ page: 0, size: 10 })
+    const [params, setParams] = useState({ page: 0, size: 5 })
     const [fields, setFields] = useState([])
 
     const [fieldFilterOptions, setFieldFilterOptions] = useState([])
@@ -81,8 +81,7 @@ const DepartmentHeadAnswer = () => {
                 <WatingAnswerModal
                     handleClose={() => setShowDetailAnswer(false)}
                     onDataChange={getWaitingAnswerData} />}
-            <div className='container w-[95%] my-5 mx-auto'>
-                <StaffModuleHeader role={'departmentHead'} moduleTitle={'Duyệt câu trả lời'} />
+            <StaffModuleHeader role={'departmentHead'} moduleTitle={'Duyệt câu trả lời'} >
                 <div className="grid grid-cols-1 lg:grid-cols-2 my-4">
                     <div className="md:flex space-x-2 mb-2 lg:mb-0 hidden">
 
@@ -107,7 +106,7 @@ const DepartmentHeadAnswer = () => {
                     params={params}
                     setParams={setParams}
                     totalPage={totalPage} />
-            </div>
+            </StaffModuleHeader>
         </>
     )
 }

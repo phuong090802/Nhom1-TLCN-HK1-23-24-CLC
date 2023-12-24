@@ -1,4 +1,4 @@
-const initParams = { page: 0, size: 10 }
+const initParams = { page: 0, size: 5 }
 const collumns = [
     { key: "name", header: "Tên người dùng" },
     { key: "email", header: "Email" },

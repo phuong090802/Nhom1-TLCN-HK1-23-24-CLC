@@ -27,7 +27,7 @@ export const AdminDepartment = () => {
     const [showAddDepModal, setAddDepModal] = useState(false)
     const [showEditDepModal, setShowEditDepModal] = useState(false)
     const [showDetailModal, setShowDetailModal] = useState(false)
-    const [params, setParams] = useState({ page: 0, size: 10 })
+    const [params, setParams] = useState({ page: 0, size: 5 })
 
     useEffect(() => {
         getDepData()
@@ -92,8 +92,7 @@ export const AdminDepartment = () => {
                 <AdminDepDetailModal
                     handleClose={() => setShowDetailModal(false)} />
             }
-            <div className='container w-[95%] my-5 mx-auto'>
-                <StaffModuleHeader role={'admin'} moduleTitle={'Quản lý khoa'} />
+                <StaffModuleHeader role={'admin'} moduleTitle={'Quản lý khoa'} >
                 <div className="grid grid-cols-1 lg:grid-cols-2 my-4">
                     <div className="flex space-x-2 mb-2 lg:mb-0">
                         <StaffButton oC={() => setAddDepModal(true)}>
@@ -117,7 +116,7 @@ export const AdminDepartment = () => {
                 />
 
                 <Pagination totalPage={totalPage} params={params} setParams={setParams} />
-            </div>
+            </StaffModuleHeader>
         </>
     )
 }

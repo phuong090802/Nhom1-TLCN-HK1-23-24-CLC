@@ -64,8 +64,7 @@ const AdminField = () => {
                 <AdminCreateFieldModal
                     handleClose={() => setShowCreateField(false)}
                     dataOnchange={getFieldData} />}
-            <div className='container w-[95%] my-5 mx-auto'>
-                <StaffModuleHeader moduleTitle={'Quản lí lĩnh vực'} role={'admin'} ></StaffModuleHeader>
+            <StaffModuleHeader moduleTitle={'Quản lí lĩnh vực'} role={'admin'} >
                 <div className="grid grid-cols-1 lg:grid-cols-2 my-4">
                     <div className="flex space-x-2 mb-2 lg:mb-0">
                         <StaffButton oC={() => { setShowCreateField(true) }}>
@@ -84,13 +83,13 @@ const AdminField = () => {
                     collumns={collumns}
                     page={params.page}
                     size={params.size}
-                    action={true}
-                    onUpdate={() => { }}
+                    // action={true}
+                    // onUpdate={() => { }}
                     statusUpdate={handleupdateFieldStatus}
                 />
 
                 <Pagination params={params} setParams={setParams} totalPage={totalPage} />
-            </div>
+            </StaffModuleHeader>
         </>
     )
 }

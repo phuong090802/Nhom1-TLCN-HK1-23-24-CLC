@@ -9,4 +9,4 @@ export const collumns = [
     { header: 'Trạng thái', key: 'status' }
 ]
 
-export const initParams = { page: 0, size: 10 }
+export const initParams = { page: 0, size: 5 }

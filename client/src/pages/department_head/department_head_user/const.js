@@ -1,6 +1,6 @@
 
 const initParams = {
-    page: 0, size: 10
+    page: 0, size: 5
 }
 
 const collumns = [

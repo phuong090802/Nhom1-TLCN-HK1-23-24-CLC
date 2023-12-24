@@ -28,13 +28,9 @@ const AdminHome = () => {
                         <p className="font-roboto text-lg font-semibold text-center text-primary mt-2">Quản lý Lĩnh vực</p>
                     </div>
                     {/* <div className="bg-white p-2 rounded-lg shadow-md border hover:bg-blue-100">
-                        <img src={questionManage} alt="" className="w-60 h-60 rounded-lg" />
-                        <p className="font-roboto text-lg font-semibold text-center text-primary mt-2">Quản lý câu hỏi</p>
-                    </div> */}
-                    <div className="bg-white p-2 rounded-lg shadow-md border hover:bg-blue-100">
                         <img src={statistic} alt="" className="w-60 h-60 rounded-lg" />
                         <p className="font-roboto text-lg font-semibold text-center text-primary mt-2">Thống kê</p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>

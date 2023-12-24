@@ -66,6 +66,15 @@ export const UserCreateQuestion = () => {
     }
 
     const handleCreateQuestion = async () => {
+        if(title === '') {
+            dispatch(errorMessage('Tiêu đề không được để trống'))
+            return
+        }
+        if(content === '') {
+            dispatch(errorMessage('Nội dung không được để trống'))
+            return
+        }
+
         dispatch(showLoading())
 
         try {
@@ -74,16 +83,11 @@ export const UserCreateQuestion = () => {
             }
             console.log(data);
             const response = await createQuestion(data)
-
-            if (response.success) {
-                dispatch(successMessage('Đặt câu hỏi thành công'))
-                setContent('')
-                setTitle('')
-            } else {
-                dispatch(errorMessage('Đặt câu hỏi không thành công'))
-            }
+            dispatch(successMessage('Đặt câu hỏi thành công'))
+            setContent('')
+            setTitle('')
         } catch (error) {
-            dispatch(errorMessage('Đặt câu hỏi không thành công'))
+            dispatch(errorMessage(error?.message ? error.message : 'Đặt câu hỏi không thành công'))
         } finally {
             dispatch(hideLoading())
         }

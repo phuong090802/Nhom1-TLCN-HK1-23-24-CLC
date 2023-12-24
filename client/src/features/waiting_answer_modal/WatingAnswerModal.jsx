@@ -52,11 +52,11 @@ const WatingAnswerModal = ({ handleClose, onDataChange }) => {
     }
 
     const handleAcceptAnswer = async () => {
-        if (!answerId) return
+        if (!answerData.answer.id) return
         dispatch(showLoading())
 
         try {
-            const response = await acceptAnswer(answerId)
+            const response = await acceptAnswer(answerData.answer.id)
             dispatch(successMessage(response?.message ? response.message : 'Duyệt câu trả lời thành công'))
             onDataChange()
             setTimeout(() => {
@@ -98,7 +98,7 @@ const WatingAnswerModal = ({ handleClose, onDataChange }) => {
                 <p className="border border-[#DBD6A4] inline-block bg-[#E7E3B3] p-[2px] rounded-md text-xs">{answerData.fieldName}</p>
                 <div className="border-2 rounded-md mt-3 p-1 max-w-[700px]" dangerouslySetInnerHTML={{ __html: answerData.content }}></div>
             </div>
-            <div className="mx-auto bg-white px-4 py-2 rounded-md shadow-md border mt-1">
+            <div className="mx-auto bg-white px-4 py-2 rounded-md shadow-md border mt-1 max-w-[900px]">
                 <div className="flex flex-row  my-3">
                     <img src={(answerData.counsellor?.avatar) ? answerData.counsellor.avatar : blankAvt}
                         alt=""

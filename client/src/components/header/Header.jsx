@@ -41,12 +41,19 @@ const Header = ({ handleLogout }) => {
                             <li className='py-2'>
                                 <Link to={'/user/message'} className="hover:text-gray-500" >MESSAGE</Link>
                             </li>}
+                        {user?.role && (user.role === 'ROLE_COUNSELLOR') &&
+                            <li className='py-2'>
+                                <Link to={'/counsellor/message'} className="hover:text-gray-500" >MESSAGE</Link>
+                            </li>}
+                        <li className='py-2'>
+                            <Link to={'/counsellorlist'} className="hover:text-gray-500" >COUNSELLOR</Link>
+                        </li>
                     </ul>
                 </div>
                 <div className="flex items-center gap-6">
                     {
                         !isAuthen ?
-                            <Link to={'/login'} className="bg-[#6EABE8] text-white px-5 py-2 rounded-full hover:bg-[#87bbef] duration-300">Sign in</Link>
+                            <Link to={'/login'} className="bg-dark_blue/80 text-white px-5 py-2 rounded-full hover:bg-dark_blue duration-300">Sign in</Link>
                             :
                             <button
                                 className="bg-my_red text-white px-5 py-2 rounded-full hover:bg-my_red/80 duration-300"

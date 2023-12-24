@@ -23,7 +23,7 @@ const CounsellorQuestion = () => {
     const questionList = useSelector(counQuestionList)
     const user = useSelector(userSelector)
 
-    const [params, setParams] = useState({ page: 0, size: 10, value: 'all' })
+    const [params, setParams] = useState({ page: 0, size: 5, value: 'all' })
     const [showResponseModal, setShowResponseModal] = useState(false)
 
 

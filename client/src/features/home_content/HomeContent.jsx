@@ -27,7 +27,7 @@ const HomeContent = () => {
 
     const currPage = searchParams.get('page') ? Number(searchParams.get('page')) : 0
 
-    const initParams = { size: 5, page: currPage }
+    const initParams = { size: 10, page: currPage }
 
     const [params, setParams] = useState(initParams)
     const questions = useSelector(questionList)
@@ -124,7 +124,7 @@ const HomeContent = () => {
                 </div>
                 <div className="h-fit ">
                     <div className='w-full bg-[#eee] flex justify-between rounded-t-lg'>
-                        <p className='bg-white w-fit p-2 font-semibold px-5  rounded-t-lg border-b text-white bg-dark_blue/80'>Khoa</p>
+                        <p className='w-fit p-2 font-semibold px-5  rounded-t-lg border-b text-white bg-dark_blue/80'>Khoa</p>
                     </div>
                     <div className='rounded-r-lg overflow-hidden border shadow-lg border-dark_blue/30 rounded-b-lg'>
                         <div className='h-[366px] bg-white overflow-y-auto rounded-r-lg  '>

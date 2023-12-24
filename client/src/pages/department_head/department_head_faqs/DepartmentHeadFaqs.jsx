@@ -24,7 +24,7 @@ const DepartmentHeadFaqs = () => {
 
     const totalPage = useSelector(depHFaqListPages)
 
-    const [params, setParams] = useState({ page: 0, size: 10, department: 'all' })
+    const [params, setParams] = useState({ page: 0, size: 5, department: 'all' })
     const [showCreateFaq, setShowCreateFaq] = useState(false)
     const [showDetailFaq, setShowDetailFaq] = useState(false)
     const [faq, setFaq] = useState({})

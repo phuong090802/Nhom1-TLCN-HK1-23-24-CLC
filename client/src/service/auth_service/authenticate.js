@@ -1,4 +1,4 @@
-import { authHeader, commonHeader } from '../../constance/requestHeader'
+import { authHeader, commonHeader, multipartHeader } from '../../constance/requestHeader'
 import { getCookieByName } from '../../utils/cookie'
 import { API } from '../tvsvInstance'
 
@@ -47,6 +47,19 @@ const updateUserInfor = (data) => {
     })
 }
 
+const updateUserAvatar = (data) => {
+    return API.patch('/users/avatar', data ,{
+        headers: multipartHeader(getCookieByName('accessToken'))
+    })
+}
+
+const getCounsellorList = (params) => {
+    return API.get('/departments/staffs', {
+        headers: authHeader(getCookieByName('accessToken')),
+        params: params
+    })
+}
+
 const getUser = () => { return API.get('/auth/me', { headers: authHeader(getCookieByName('accessToken')) }) }
 
 export {
@@ -57,5 +70,7 @@ export {
     refreshToken,
     requestResetPassword,
     resetPassword,
-    updateUserInfor
+    updateUserInfor,
+    updateUserAvatar,
+    getCounsellorList
 }
