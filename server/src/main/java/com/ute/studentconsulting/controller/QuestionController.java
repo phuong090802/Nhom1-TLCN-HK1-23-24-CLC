@@ -75,7 +75,7 @@ public class QuestionController {
     }
 
     private ResponseEntity<?> handlePatchViewsQuestion(String id) {
-        // status <> 2 (private)
+        // status <> 3 (private)
         var question = questionService.findByIdAndStatusIsNot(id, 3);
         var views = question.getViews() + 1;
         question.setViews(views);
@@ -98,12 +98,12 @@ public class QuestionController {
     private Page<Question> getQuestionByDepartmentIsAndFieldIsAll
     (String departmentId, Pageable pageable) {
         return departmentId.equals("all")
-                // 2 = private
+                // 3 = private
                 // value = null, department = all, field = all
-                ? questionService.findAllByStatusIsNot(2, pageable)
+                ? questionService.findAllByStatusIsNot(3, pageable)
                 // value = null, department = value, field = all
                 : questionService.findAllByDepartmentIsAndStatusIsNot
-                (departmentService.findByIdAndStatusIs(departmentId, true), 2, pageable);
+                (departmentService.findByIdAndStatusIs(departmentId, true), 3, pageable);
     }
 
     // value = null, department = all/value, field = value
@@ -111,10 +111,10 @@ public class QuestionController {
         var field = fieldService.findById(fieldId);
         return departmentId.equals("all")
                 // value = null, department = value, field = value
-                ? questionService.findAllByFieldIsAndStatusIsNot(field, 2, pageable)
+                ? questionService.findAllByFieldIsAndStatusIsNot(field, 3, pageable)
                 // value = null, department = value, field = value
                 : questionService.findAllByFieldIsAndDepartmentIsAndStatusIsNot
-                (field, departmentService.findByIdAndStatusIs(departmentId, true), 2, pageable);
+                (field, departmentService.findByIdAndStatusIs(departmentId, true), 3, pageable);
     }
 
     // value = value, department = all/value, field = all
@@ -123,10 +123,10 @@ public class QuestionController {
         return departmentId.equals("all")
                 // value = value, department = all, field = all
                 ? questionService.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseAndStatusIsNot
-                (value, 2, pageable)
+                (value, 3, pageable)
                 // value = value, department = value, field = all
                 : questionService.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseAndDepartmentIsAndStatusIsNot
-                (value, departmentService.findById(departmentId), 2, pageable);
+                (value, departmentService.findById(departmentId), 3, pageable);
     }
 
     // value = value, department = all/value, field = all
@@ -134,9 +134,10 @@ public class QuestionController {
     (String value, String departmentId, String fieldId, Pageable pageable) {
         var field = fieldService.findById(fieldId);
         return departmentId.equals("all")
-                ? questionService.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseAndFieldIsAndStatusIsNot(value, field, 2, pageable)
+                ? questionService.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseAndFieldIsAndStatusIsNot
+                (value, field, 3, pageable)
                 : questionService.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseAndDepartmentIsAndFieldIsAndStatusIsNot
-                (value, departmentService.findByIdAndStatusIs(departmentId, true), field, 2, pageable);
+                (value, departmentService.findByIdAndStatusIs(departmentId, true), field, 3, pageable);
     }
 
 
