@@ -30,7 +30,7 @@ const ChatBody = ({ conversation }) => {
 
     useEffect(() => {
         const client = new Client({
-            brokerURL: 'wss://student-consulting.onrender.com/messages',
+            brokerURL: 'ws://localhost:8080/messages',
             connectHeaders: headers,
         });
 
