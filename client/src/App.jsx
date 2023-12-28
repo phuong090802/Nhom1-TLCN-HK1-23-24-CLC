@@ -37,6 +37,7 @@ import DepartmentHeadFaqs from "./pages/department_head/department_head_faqs";
 import CounsellorFeedback from "./pages/counsellor/counsellor_feedback";
 import UserMessage from "./pages/user/user_message";
 import CounsellorList from "./pages/public/counsellor_list/CounsellorList";
+import Page404 from "./pages/public/404/404";
 
 function App() {
   const dispatch = useDispatch()
@@ -127,7 +128,7 @@ function App() {
               <Route path="message" element={<UserMessage />} />
               <Route path="question/create" element={<UserCreateQuestion />} />
             </Route>
-
+            <Route path="/*" element={<Page404 />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -27,7 +27,7 @@ const HomeContent = () => {
 
     const currPage = searchParams.get('page') ? Number(searchParams.get('page')) : 0
 
-    const initParams = { size: 10, page: currPage }
+    const initParams = { size: 5, page: currPage }
 
     const [params, setParams] = useState(initParams)
     const questions = useSelector(questionList)
@@ -47,12 +47,8 @@ const HomeContent = () => {
 
         try {
             const response = await getQuestionList(params)
-            if (response.success) {
-                dispatch(setQuestionList(response.data.items))
-                dispatch(setTotalPage(response.data.pages))
-            } else {
-                dispatch(errorMessage(response?.message ? response.message : 'Lỗi lấy dữ liệu'))
-            }
+            dispatch(setQuestionList(response.data.items))
+            dispatch(setTotalPage(response.data.pages))
         } catch (error) {
             dispatch(errorMessage(error?.message ? error.message : 'Lỗi lấy dữ liệu'))
         } finally {

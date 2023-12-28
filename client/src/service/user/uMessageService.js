@@ -9,9 +9,10 @@ const getMessageList = (params) => {
     })
 }
 
-const getAllMessage = id => {
-    return API.get(`/conversations/${id}`, {
-        headers:authHeader(getCookieByName("accessToken"))
+const getAllMessage = (data) => {
+    return API.get(`/conversations/${data.id}`, {
+        headers:authHeader(getCookieByName("accessToken")),
+        params: data.params
     })
 }
 

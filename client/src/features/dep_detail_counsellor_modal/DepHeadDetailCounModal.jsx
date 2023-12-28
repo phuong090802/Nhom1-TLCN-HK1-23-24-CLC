@@ -5,6 +5,7 @@ import { errorMessage, hideLoading, showLoading, successMessage } from "../../re
 import { addFieldsToCounsellor, getCounsellorById, getFieldCounsellorNotHave } from "../../service/dephead_service/depCounsellorService"
 import CounsellorProfileModal from "../../features/counsellor_profile_modal"
 import MultiFieldsAddModal from "../multi_fields_add_modal/MultiFieldsAddModal"
+import AddCounFieldsModal from "../add_coun_fields_modal/AddCounFieldsModal"
 
 const DepHeadDetailCounModal = ({ handleClose }) => {
     const dispatch = useDispatch()
@@ -38,22 +39,7 @@ const DepHeadDetailCounModal = ({ handleClose }) => {
         }
     }
 
-    const addFieldToCounsellor = async (data) => {
-        dispatch(showLoading())
-        try {
-            const response = await addFieldsToCounsellor({ id: counsellorId, fieldIds: { ids: data } })
-            if (response.success) {
-                getCounsellorProfile()
-                dispatch(successMessage(response?.message ? response.message : 'Thêm lĩnh vực cho nhân viên thành công'))
-            } else {
-                dispatch(errorMessage(response?.message ? response.message : 'Lỗi lấy thêm lĩnh vực cho nhân viên (DepdetailModal)'))
-            }
-        } catch (error) {
-            dispatch(errorMessage(error?.message ? error.message : 'Lỗi lấy thêm lĩnh vực cho nhân viên (DepdetailModal)'))
-        } finally {
-            dispatch(hideLoading())
-        }
-    }
+
 
     return (
         showInfor ?
@@ -62,11 +48,12 @@ const DepHeadDetailCounModal = ({ handleClose }) => {
                 counsellorProfile={counsellorProfile}
                 toggle={() => setShowInfor(false)} />
             :
-            <MultiFieldsAddModal
+            <AddCounFieldsModal
                 handleClose={handleClose}
                 initFieldList={fieldList}
+                counsellorId={counsellorId}
                 toggle={() => setShowInfor(true)}
-                handleAddFields={addFieldToCounsellor} />
+                dataOnChange={getCounsellorProfile} />
     )
 }
 export default DepHeadDetailCounModal

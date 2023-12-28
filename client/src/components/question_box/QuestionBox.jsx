@@ -6,7 +6,7 @@ const QuestionBox = ({ question, handleQuestionClick }) => {
 
     return (
         question && <div className='border-b-2 border-gray-200 p-3 flex px-4 text-gray-600'>
-            <div className={`mr-3 flex flex-col justify-center items-center p-2 border ${(question.status === 2) ? 'border-green-500 ' : 'border-red-500 cursor-default'} hover:bg-gray-400 hover:text-white cursor-pointer hover:border-none rounded-lg text-[#848F95] font-semibold w-[70px] h-[80px] text-sm  duration-500`}
+            <div className={`mr-3 flex flex-col justify-center items-center p-2 border ${(question.status === 2) ? 'border-green-500 ' : 'border-red-500 cursor-default'} hover:bg-gray-400 hover:text-white cursor-pointer hover:border-none rounded-lg text-[#848F95] font-semibold min-w-[70px] h-[80px] text-sm  duration-500`}
                 onClick={() => {
                     handleQuestionClick(question.questionId)
                 }}>

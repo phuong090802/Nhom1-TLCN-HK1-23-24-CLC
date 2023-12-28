@@ -57,7 +57,7 @@ public class QuestionController {
     }
 
     private AnswerDetailsModel getAnswerDetails(Question question, SimpleDateFormat simpleDateFormat) {
-        if (question.getStatus() == 1) {
+        if (question.getStatus() == 2) {
             var staff = userService.findById(question.getAnswer().getStaff().getId());
             return new AnswerDetailsModel(
                     question.getAnswer().getContent(),

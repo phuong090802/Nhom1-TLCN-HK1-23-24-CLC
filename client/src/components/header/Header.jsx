@@ -16,7 +16,7 @@ const Header = ({ handleLogout }) => {
 
     return (
         <header className="bg-white font-[Poppins] border w-full z-40">
-            <nav className="flex justify-between items-center w-[92%]  mx-auto">
+            <nav className="flex justify-between items-center w-[100%] px-5 mx-auto">
                 <div className="cursor-pointer z-20" onClick={() => {
                     if (locate.path === '/home') return
                     navigate('/')
@@ -53,11 +53,11 @@ const Header = ({ handleLogout }) => {
                 <div className="flex items-center gap-6">
                     {
                         !isAuthen ?
-                            <Link to={'/login'} className="bg-dark_blue/80 text-white px-5 py-2 rounded-full hover:bg-dark_blue duration-300">Sign in</Link>
+                            <Link to={'/login'} className="bg-dark_blue/80 text-white px-5 py-2 rounded-md hover:bg-dark_blue duration-300">Sign in</Link>
                             :
                             <button
-                                className="bg-my_red text-white px-5 py-2 rounded-full hover:bg-my_red/80 duration-300"
-                                onClick={() => handleLogout()}>Log Out</button>
+                                className="bg-my_red text-white px-5 py-2 rounded-md hover:bg-my_red/80 duration-300"
+                                onClick={handleLogout}>Log Out</button>
                     }
                     <button onClick={() => setOpen(!open)} name="menu" className="text-3xl cursor-pointer md:hidden">
                         {

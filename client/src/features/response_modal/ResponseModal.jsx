@@ -19,13 +19,14 @@ const ResponseModal = ({ handleClose, dataChange }) => {
     const [depList, setDepList] = useState([])
     const [showResponse, setShowResponse] = useState(false)
     const [showForwardOptions, setShowForwardOption] = useState(false)
-    const [showPrivate, setShowPrivate] = useState(false)
     const [content, setContent] = useState('')
-    const [privateMessage, setPrivateMessage] = useState('')
+    const [responseType, setResponseType] = useState('public')
+    const [approveRequest, setApproveRequest] = useState(false)
 
     useEffect(() => {
         getQuestionData()
     }, [])
+
 
     const getQuestionData = async () => {
         dispatch(showLoading())
@@ -56,7 +57,7 @@ const ResponseModal = ({ handleClose, dataChange }) => {
     }
 
 
-    const handleResponse = async () => {
+    const handlePublicResponse = async () => {
         if (content === '') {
             dispatch(errorMessage('Nội dung câu trả lời không được để trống'))
             return
@@ -65,7 +66,7 @@ const ResponseModal = ({ handleClose, dataChange }) => {
         dispatch(showLoading())
 
         try {
-            const data = { isPrivate: false, content, questionId }
+            const data = { isPrivate: false, content, questionId, approveRequest }
             const response = await responseQuestion(data)
             dispatch(successMessage(response?.message ? response.message : 'Phản hồi thành công'))
             dataChange()
@@ -103,13 +104,21 @@ const ResponseModal = ({ handleClose, dataChange }) => {
         }
     }
 
+    const handleResponse = () => {
+        if (responseType === 'private') {
+            handlePrivateResponse()
+        } else {
+            handlePublicResponse()
+        }
+    }
+
 
 
     const handlePrivateResponse = async () => {
         dispatch(showLoading())
 
         try {
-            const data = { questionId, content: privateMessage }
+            const data = { questionId, content }
             const response = await privateResponse(data)
             dispatch(successMessage(response?.message ? response.message : 'Đã phản hồi qua hộp thư'))
             dataChange()
@@ -125,7 +134,7 @@ const ResponseModal = ({ handleClose, dataChange }) => {
     return <>
         <ModalLayout role='counsellor' handleClose={handleClose} title={'Trả lời câu hỏi'}>
             <div className="text-[#2A2A2A] max-h-[700px] overflow-y-auto min-w-[400px] max-w-[550px]">
-                {!showResponse && !showPrivate &&
+                {!showResponse &&
                     <div className="bg-white px-4 rounded-md shadow-md border  duration-500">
                         <h2 className="text-xl font-semibold mb-4">Thông tin người hỏi</h2>
                         <div className="mb-4">
@@ -145,17 +154,8 @@ const ResponseModal = ({ handleClose, dataChange }) => {
                     <p className="border border-dark_blue inline-block bg-gray-400 text-white p-[2px] rounded-md text-xs">{questionData.fieldName}</p>
                     <div className="border-2 rounded-md mt-3 p-1 max-w-[700px]" dangerouslySetInnerHTML={{ __html: questionData.content }}></div>
                 </div>
-                {!showResponse && !showForwardOptions && !showPrivate &&
+                {!showResponse && !showForwardOptions &&
                     <div className="flex justify-end gap-1 mt-3  duration-500">
-                        <button className={`px-4 py-2 bg-amber-600 hover:bg-amber-500 focus:border-amber-300 text-white rounded-md  focus:outline-none focus:ring duration-500`}
-                            onClick={() => {
-                                setShowPrivate(true)
-                                setPrivateMessage(`<p><strong>Câu hỏi của bạn đến khoa: "${questionData.departmentName}".
-                                    </strong></p><p><strong>Về lĩnh vực : "${questionData.fieldName}" .</strong></p>
-                                    <p><strong>Với tiêu đề: "${questionData.title}".</strong></p>
-                                    <p><strong>Đây là phản từ nhân viên hệ thống đến trực tiếp cho bạn về câu hỏi trên.</strong></p><p><br>
-                                    </p><p>Nội dung phản hồi:</p><p><br></p>`)
-                            }}>Trả lời qua tin nhắn</button>
                         <button className={`px-4 py-2 bg-blue-600 hover:bg-blue-500 focus:border-blue-300 text-white rounded-md  focus:outline-none focus:ring duration-500`}
                             onClick={() => {
                                 getDepListData()
@@ -169,8 +169,49 @@ const ResponseModal = ({ handleClose, dataChange }) => {
                     </div>
                 }
                 {showResponse &&
-                    <div className="mt-4 duration-500">
+                    <div className="mt-4 duration-500 ">
                         <p className="font-bold text-lg">Phản hồi:</p>
+                        <div className="flex gap-4">
+                            <div>
+                                <input
+                                    type="radio"
+                                    className="mr-1"
+                                    name="responseType"
+                                    value="public"
+                                    id="publicRadio"
+                                    onChange={e => setResponseType(e.target.value)}
+                                    checked={responseType === 'public'}
+                                />
+                                <label htmlFor="publicRadio">Công khai</label>
+                            </div>
+                            <div>
+                                <input
+                                    type="radio"
+                                    className="mr-1"
+                                    name="responseType"
+                                    value="private"
+                                    id="privateRadio"
+                                    onChange={e => {
+                                        setResponseType(e.target.value)
+                                        setApproveRequest(false)
+                                    }}
+                                    checked={responseType === 'private'}
+                                />
+                                <label htmlFor="privateRadio">Riêng tư</label>
+                            </div>
+
+                        </div>
+                        {responseType === 'public' && <div>
+                            <input
+                                type="checkbox"
+                                className="mr-1"
+                                name="responseType"
+                                id="approveRequest"
+                                onChange={() => setApproveRequest(!approveRequest)}
+                                checked={approveRequest}
+                            />
+                            <label htmlFor="approveRequest">Yêu cầu duyệt</label>
+                        </div>}
                         <ReactQuill
                             value={content}
                             className=' bg-white border border-[#CCCCCC] rounded-md overflow-hidden'
@@ -184,28 +225,7 @@ const ResponseModal = ({ handleClose, dataChange }) => {
                                     setShowResponse(false)
                                 }}>Hủy</button>
                             <button className={`px-4 py-2 bg-green-600 hover:bg-green-500 focus:border-green-300 text-white rounded-md  focus:outline-none focus:ring duration-500`}
-                                onClick={handleResponse}>Đăng</button>
-                        </div>
-                    </div>
-                }
-                {showPrivate &&
-                    <div className="mt-4 duration-500">
-                        <p className="font-bold text-lg">Tạo tin nhắn:</p>
-                        <ReactQuill
-                            className=' bg-white border border-[#CCCCCC] rounded-md overflow-hidden'
-                            theme='snow'
-                            placeholder='Nội dung...'
-                            onChange={setPrivateMessage}
-                            value={privateMessage}
-                            modules={{ toolbar: false }}
-                        />
-                        <div className="flex justify-end gap-1 mt-3">
-                            <button className={`px-4 py-2 bg-red-600 hover:bg-red-500 focus:border-red-300 text-white rounded-md  focus:outline-none focus:ring duration-500`}
-                                onClick={() => {
-                                    setShowPrivate(false)
-                                }}>Hủy</button>
-                            <button className={`px-4 py-2 bg-green-600 hover:bg-green-500 focus:border-green-300 text-white rounded-md  focus:outline-none focus:ring duration-500`}
-                                onClick={handlePrivateResponse}>Gửi</button>
+                                onClick={handleResponse}>Gửi</button>
                         </div>
                     </div>
                 }
