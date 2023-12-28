@@ -58,6 +58,7 @@ public class DepartmentHeadController {
         var content = request.getContent() != null ? request.getContent() : "Câu trả lời của bạn đã bị từ chối";
         var feedback = new Feedback(question.getTitle(), content, new Date(), user, question);
         feedbackService.save(feedback);
+        question.setStatus(0);
         question.setAnswer(null);
         questionService.save(question);
         answerService.deleteByQuestion(question);
