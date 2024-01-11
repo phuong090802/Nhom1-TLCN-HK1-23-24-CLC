@@ -3,7 +3,7 @@ import { getCookieByName } from "../../utils/cookie"
 import { API } from "../tvsvInstance"
 
 const getQuestionList = (params) => {
-    return API.get('/questions', {
+    return API.get('/questions?sort=date,desc', {
         headers: commonHeader,
         params: params
     })

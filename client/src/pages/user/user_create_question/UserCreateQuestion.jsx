@@ -143,6 +143,7 @@ export const UserCreateQuestion = () => {
                         theme='snow'
                         onChange={setContent}
                         placeholder='Nội dung...'
+                        value={content}
                     />
                     {/* <textarea
                         name='content'

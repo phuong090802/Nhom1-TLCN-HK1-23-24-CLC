@@ -67,7 +67,7 @@ const AdminAddStaffModal = ({ handleClose, onDataChange }) => {
                         name='role'
                         onChange={e => handleInputChange(e)}>
                         <option value='counsellor'>Tư vấn viên</option>
-                        <option value='supervisor'>Giám sát viên</option>
+                        {/* <option value='supervisor'>Giám sát viên</option> */}
                     </select>
                 </div>
                 <div className="mb-4 font-roboto">

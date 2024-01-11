@@ -14,6 +14,7 @@ import PaginationParams from '../../components/pagination_params/PaginationParam
 import { useSearchParams } from 'react-router-dom';
 import { increaseView } from '../../service/counsellor_service/counsellorQuestionService';
 import Loading from '../../components/loading_component/Loading';
+import SearchBar from '../../components/search_bar/SearchBar';
 
 
 const HomeContent = () => {
@@ -27,7 +28,7 @@ const HomeContent = () => {
 
     const currPage = searchParams.get('page') ? Number(searchParams.get('page')) : 0
 
-    const initParams = { size: 5, page: currPage }
+    const initParams = { size: 5, page: currPage}
 
     const [params, setParams] = useState(initParams)
     const questions = useSelector(questionList)
@@ -98,6 +99,10 @@ const HomeContent = () => {
                 <div className="col-span-3">
                     <div className='w-full bg-[#EEEEEE] flex justify-between '>
                         <p className='w-fit p-2 font-bold rounded-t-lg px-10 border-b text-white bg-dark_blue/80'>{title}</p>
+                        <SearchBar
+                            params={params}
+                            setParams={setParams}
+                        />
                     </div>
                     <div className='bg-white rounded-r-lg rounded-b-lg shadow-lg border border-dark_blue/30'>
                         {
