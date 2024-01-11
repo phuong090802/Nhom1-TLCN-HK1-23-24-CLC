@@ -5,6 +5,7 @@ import com.ute.studentconsulting.entity.RoleName;
 import com.ute.studentconsulting.entity.User;
 import com.ute.studentconsulting.model.ConversationModel;
 import com.ute.studentconsulting.model.MessageModel;
+import com.ute.studentconsulting.model.PaginationModel;
 import com.ute.studentconsulting.payload.response.ApiSuccessResponse;
 import com.ute.studentconsulting.payload.response.SuccessResponse;
 import com.ute.studentconsulting.service.ConversationService;
@@ -13,6 +14,7 @@ import com.ute.studentconsulting.service.UserService;
 import com.ute.studentconsulting.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,17 +96,25 @@ public class ConversationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAllMessage(@PathVariable("id") String id) {
-        return handleGetAllMessage(id);
+    public ResponseEntity<?> getAllMessage(
+            @PathVariable("id") String id,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "3") int size) {
+        return handleGetAllMessage(id, page, size);
     }
 
-    private ResponseEntity<?> handleGetAllMessage(String id) {
+    private ResponseEntity<?> handleGetAllMessage(String id, int page, int size) {
         var conversation = conversationService.findById(id);
         var simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        var messages = messageService.findAllByConversationOrderBySentAtAsc(conversation).stream().map(message ->
+        var pageable = PageRequest.of(page, size);
+        var messagesPage = messageService.findAllByConversationOrderBySentAtDesc(conversation, pageable);
+        var messages = messagesPage.getContent().stream().map(message ->
                 new MessageModel(message.getId(), message.getMessageText(),
                         simpleDateFormat.format(message.getSentAt()),
                         true, message.getSender().getId())).toList();
-        return ResponseEntity.ok(new ApiSuccessResponse<>(messages));
+        var response = new PaginationModel<>(
+                messages, messagesPage.getNumber(),
+                messagesPage.getTotalPages());
+        return ResponseEntity.ok(new ApiSuccessResponse<>(response));
     }
 }

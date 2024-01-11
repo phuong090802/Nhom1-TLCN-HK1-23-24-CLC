@@ -117,11 +117,11 @@ public class StaffController {
                     .body(new SuccessResponse("Câu hỏi đã được trả lời"));
         }
         var answer = new Answer(request.getContent(), new Date(), false, staff, question);
-        if (staff.getRole().getName().equals(RoleName.ROLE_DEPARTMENT_HEAD)) {
+        // 0 chua duoc trả lời, 1 đã trả lời chưa được duyệt, 2 trả lời công khai, 3 riêng tư
+        question.setStatus(1);
+        if (staff.getRole().getName().equals(RoleName.ROLE_DEPARTMENT_HEAD) || !request.isApproveRequest()) {
             answer.setApproved(true);
             question.setStatus(2);
-        } else {
-            question.setStatus(1);
         }
         answerService.save(answer);
         questionService.save(question);

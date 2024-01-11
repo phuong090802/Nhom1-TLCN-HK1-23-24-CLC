@@ -5,10 +5,11 @@ import com.ute.studentconsulting.entity.Message;
 import com.ute.studentconsulting.repository.MessageRepository;
 import com.ute.studentconsulting.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +29,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findAllByConversationOrderBySentAtAsc(Conversation conversation) {
-        return messageRepository.findAllByConversationOrderBySentAtAsc(conversation);
+    public Page<Message> findAllByConversationOrderBySentAtDesc(Conversation conversation, Pageable pageable) {
+        return messageRepository.findAllByConversationOrderBySentAtDesc(conversation, pageable);
     }
 
 
